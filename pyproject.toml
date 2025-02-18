@@ -1,5 +1,5 @@
 [project]
-name = "ccaf-prefix_avro_schema_root_fields-app"
+name = "ccaf-prefix_avro_schema_root_field_names-app"
 version = "0.01.00.000"
 description = "CCAF Prefix Avro Schema Root Fields App"
 readme = "README.md"

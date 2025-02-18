@@ -30,7 +30,7 @@ wheels = [
 ]
 
 [[package]]
-name = "ccaf-prefix-avro-schema-root-fields-app"
+name = "ccaf-prefix-avro-schema-root-field-names-app"
 version = "0.1.0.0"
 source = { virtual = "." }
 dependencies = [
