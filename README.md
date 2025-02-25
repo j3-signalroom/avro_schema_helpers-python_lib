@@ -1,2 +1,2 @@
-# Confluent Cloud for Apache Flink (CCAF) Prefix Avro Schema Root Field Names App
+# Confluent Cloud for Apache Flink (CCAF) Avro Schema Helpers Library for Python
 
