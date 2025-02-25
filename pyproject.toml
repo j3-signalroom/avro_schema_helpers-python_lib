@@ -8,11 +8,8 @@ authors = [
     { name = "Jeffrey Jonathan Jennings (J3)", email = "j3@thej3.com" }
 ]
 dependencies = [
-    "confluent-flink-table-api-python-plugin>=1.20.50",
-    "fastavro>=1.10.0",
     "pytest>=8.3.4",
     "setuptools>=65.5.1",
-    "cc-clients-lib @ git+https://github.com/j3-signalroom/cc-clients-lib.git",
 ]
 
 [tool.pytest.ini_options]
