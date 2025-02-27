@@ -2,10 +2,10 @@ from ccaf_avro_schema_helpers_python_lib.swap_camelcase_with_snakecase import Sw
 from ccaf_avro_schema_helpers_python_lib.utility import to_snake_case
 
 
-__copyright__  = "Copyright (c) 2025 CHS Inc."
+__copyright__  = "Copyright (c) 2025 Jeffrey Jonathan Jennings"
 __credits__    = ["Jeffrey Jonathan Jennings (J3)"]
 __maintainer__ = "Jeffrey Jonathan Jennings (J3)"
-__email__      = "jeffrey.jennings@chsinc.com"
+__email__      = "j3@thej3.com"
 __status__     = "dev"
 
 
