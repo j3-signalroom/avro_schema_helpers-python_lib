@@ -1,1 +1,1 @@
-# Avro Schema Helpers Library for Python
+# Avro Schena Helpers Python Library
