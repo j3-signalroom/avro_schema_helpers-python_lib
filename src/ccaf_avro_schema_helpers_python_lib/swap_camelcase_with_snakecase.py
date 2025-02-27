@@ -10,8 +10,8 @@ __status__     = "dev"
 
 class SwapCamelcaseWithSnakecase:
     """This class converts a camelCase record or field name to a snake_case record or field name
-    This is useful for converting Avro schema field names to Flink SQL field names."""
-    
+    This is useful for converting Avro schema field names to Flink SQL field names.
+    """
     def __init__(self, original_schema: dict, topic_name: str, reverse_name_with_alias: bool) :
         """Constructor adds the aliases to the schema.
  

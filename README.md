@@ -8,8 +8,8 @@
 
 ## 1.0 Overview
 
-### 1.1 `GenerateFlinkSqlStatementsForFullyFlattenRootRecord` class
-This class constructs a pair of Flink SQL statements from the Avro schema based on the provided outermost JSON object or JSON array column. These Flink SQL statements include the `CREATE TABLE` and `INSERT INTO SELECT FROM` statements. The `CREATE TABLE` statement creates the Sink Table, which subsequently establishes the backing sink Kafka topic. The `INSERT INTO SELECT FROM` statement generates a continuous, unbounded data stream that populates the sink table
+### 1.1 [`generate_flink_sql_statements_for_fully_flatten_root_record` module](./src/ccaf_avro_schema_helpers_python_lib/generate_flink_sql_statements_for_fully_flatten_root_record.py)
+This module's class constructs a pair of Flink SQL statements from the Avro schema based on the provided outermost JSON object or JSON array column. These Flink SQL statements include the `CREATE TABLE` and `INSERT INTO SELECT FROM` statements. The `CREATE TABLE` statement creates the Sink Table, which subsequently establishes the backing sink Kafka topic. The `INSERT INTO SELECT FROM` statement generates a continuous, unbounded data stream that populates the sink table
 
-#### 1.2 `SwapCamelcaseWithSnakecase` class
-This class converts a camelCase record or field name to a snake_case record or field name. This is useful for converting Avro schema field names to Flink SQL field names.
+### 1.2 [`swap_camelcase_with_snakecase` module](./src/ccaf_avro_schema_helpers_python_lib/swap_camelcase_with_snakecase.py)
+This module's class traverses an entire Avro schema and converts every `camelCase` record or field name into a `snake_case` record or field name. This is useful for transforming Avro schema field names into Flink SQL style field names.
