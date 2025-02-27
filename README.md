@@ -1,1 +1,1 @@
-# Avro Schena Helpers Python Library
+# Confluent Cloud for Apache Flink (CCAF) Avro Schema Helpers Python Library
