@@ -57,12 +57,12 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
         """This constructor constructs the pair of sink Flink SQL statements.
  
         Args:
-            avro_schema (Dict):             The Avro schema.
-            working_root_column (Dict):     The working root column metadata.
-            root_column_names (List[str]):  The list of all the root column names.
-            common_root_columns (List[Dict]):    The parent columns.
-            source_table_name (str):        The source table name.
-            sink_table_name (str):          The sink table name.
+            avro_schema (Dict):                The Avro schema.
+            working_root_column (Dict):        The working root column metadata.
+            root_column_names (List[str]):     The list of all the root column names.
+            common_root_columns (List[Dict]):  The parent columns.
+            source_table_name (str):           The source table name.
+            sink_table_name (str):             The sink table name.
         """
         # Initialize the class variables.
         self._common_root_columns = common_root_columns        
