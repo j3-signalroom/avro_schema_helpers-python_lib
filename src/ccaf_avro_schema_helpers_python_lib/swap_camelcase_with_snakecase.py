@@ -1,4 +1,4 @@
-import re
+from ccaf_avro_schema_helpers_python_lib.utility import to_snake_case
 
 
 __copyright__  = "Copyright (c) 2025 Jeffrey Jonathan Jennings"
@@ -32,21 +32,6 @@ class SwapCamelcaseWithSnakecase:
             dict: The updated schema.
         """
         return self._updated_schema
-    
-    def to_lower_camel_case(self, name: str) -> str:
-        """ Convert a string to lowerCamelCase."""
-        words = re.split(r'[\s_-]+|(?<!^)(?=[A-Z])', name)
-        if not words:
-            return name
-    
-        # Lowercase the first word; capitalize the rest.
-        return words[0].lower() + ''.join(word.capitalize() for word in words[1:])
-    
-
-    def to_snake_case(self, name: str) -> str:
-        """Convert a string (e.g. CamelCase or mixedCase) to snake_case."""
-        # Insert an underscore before each capital letter (that isn't at start) and lowercase everything.
-        return re.sub(r'(?<!^)(?=[A-Z])', '_', name).lower()
  
     def _traverse_schema(self, schema: dict) -> None:
         """Recursively traverse the Avro schema, adding snake_case aliases
@@ -92,7 +77,7 @@ class SwapCamelcaseWithSnakecase:
         # Only do this if 'name' exists in the record definition
         if "name" in schema:
             if not self._reverse_name_with_alias:
-                snake_case_name = self.to_snake_case(schema["name"].removeprefix(self._prefix))
+                snake_case_name = to_snake_case(schema["name"].removeprefix(self._prefix))
                
                 # If 'aliases' already present, just append (or ignore if you want strict one-value aliases).
                 if "aliases" in schema:
@@ -102,7 +87,7 @@ class SwapCamelcaseWithSnakecase:
             else:
                 original_name = schema["name"].removeprefix(self._prefix)
  
-                schema["name"] = self.to_snake_case(schema["name"].removeprefix(self._prefix))
+                schema["name"] = to_snake_case(schema["name"].removeprefix(self._prefix))
  
                 # If 'aliases' already present, just append (or ignore if you want strict one-value aliases).
                 if "aliases" in schema:
@@ -121,7 +106,7 @@ class SwapCamelcaseWithSnakecase:
             field (dict): The field to update.
         """
         if not self._reverse_name_with_alias:
-            snake_case_name = self.to_snake_case(field["name"])
+            snake_case_name = to_snake_case(field["name"])
             if "aliases" in field:
                 field["aliases"].append(snake_case_name)
             else:
@@ -129,7 +114,7 @@ class SwapCamelcaseWithSnakecase:
         else:
             original_name = field["name"]
  
-            field["name"] = self.to_snake_case(field["name"].removeprefix(self._prefix))
+            field["name"] = to_snake_case(field["name"].removeprefix(self._prefix))
             if "aliases" in field:
                 field["aliases"].append(original_name)
             else:
