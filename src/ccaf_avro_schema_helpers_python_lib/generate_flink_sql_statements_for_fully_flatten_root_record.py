@@ -53,18 +53,20 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
     Kafka topic. The INSERT INTO SELECT FROM statement generates a continuous unbounded
     data stream that populates the sink table.
     """
-    def __init__(self, avro_schema: Dict, working_root_column: Dict, root_column_names: List[str], common_root_columns: List[Dict], source_table_name: str, sink_table_name: str) -> None:
+    def __init__(self, avro_schema: Dict, working_root_column: Dict, root_column_names: List[str], common_root_columns: List[Dict], source_kafka_topic_subject_schema_name: str, source_table_name: str, sink_table_name: str) -> None:
         """This constructor constructs the pair of sink Flink SQL statements.
  
         Args:
-            avro_schema (Dict):                The Avro schema.
-            working_root_column (Dict):        The working root column metadata.
-            root_column_names (List[str]):     The list of all the root column names.
-            common_root_columns (List[Dict]):  The parent columns.
-            source_table_name (str):           The source table name.
-            sink_table_name (str):             The sink table name.
+            avro_schema (Dict):                             The Avro schema.
+            working_root_column (Dict):                     The working root column metadata.
+            root_column_names (List[str]):                  The list of all the root column names.
+            common_root_columns (List[Dict]):               The parent columns.
+            source_kafka_topic_subject_schema_name (str):   The source Kafka topic name.
+            source_table_name (str):                        The source table name.
+            sink_table_name (str):                          The sink table name.
         """
         # Initialize the class variables.
+        self.source_kafka_topic_subject_schema_name = source_kafka_topic_subject_schema_name
         self._common_root_columns = common_root_columns        
         self._root_column_name = working_root_column[ROOT_COLUMN_METADATA['name']]
         self._root_column_is_array = working_root_column[ROOT_COLUMN_METADATA['is_array']]
@@ -580,7 +582,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
                 if field['name'] == target_name:
                     target_schema = {
                         "type": "record",
-                        "name": "dev_mastery_load_raw_avro_value",
+                        "name": self.source_kafka_topic_subject_schema_name,
                         "namespace": "org.apache.flink.avro.generated.record",
                         "fields": []
                     }

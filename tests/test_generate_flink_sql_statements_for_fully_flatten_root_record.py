@@ -32,6 +32,7 @@ def test_generate_all_flink_statement_files():
                                                                     {"name": "load_last_updated_at", "type": "double"},
                                                                     {"name": "load_created_by", "type": "string"},
                                                                     {"name": "load_number", "type": "string"}],
+                                                                    "example_value",
                                                                     "catalog.database.`example_table`",
                                                                     f"catalog.database.`example.{base_object[ROOT_COLUMN_METADATA['alt_name']]}`")
  
