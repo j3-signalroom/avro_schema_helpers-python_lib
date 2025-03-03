@@ -13,7 +13,6 @@ RESERVED_WORDS = ["order", "number", "count", "value", "references", "model", "y
 
 ARRAY_WITHIN_INDICATOR = "array-"
 TABLE_ALIAS_NAME = "tbl"
-PRIMARY_KEY_NAME = "load_id"
  
 # Root Column metadata.
 ROOT_COLUMN_METADATA = {
@@ -53,7 +52,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
     Kafka topic. The INSERT INTO SELECT FROM statement generates a continuous unbounded
     data stream that populates the sink table.
     """
-    def __init__(self, avro_schema: Dict, working_root_column: Dict, root_column_names: List[str], common_root_columns: List[Dict], source_kafka_topic_subject_schema_name: str, source_table_name: str, sink_table_name: str) -> None:
+    def __init__(self, avro_schema: Dict, working_root_column: Dict, root_column_names: List[str], common_root_columns: List[Dict], primary_key: str, source_kafka_topic_subject_schema_name: str, source_table_name: str, sink_table_name: str) -> None:
         """This constructor constructs the pair of sink Flink SQL statements.
  
         Args:
@@ -61,6 +60,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
             working_root_column (Dict):                     The working root column metadata.
             root_column_names (List[str]):                  The list of all the root column names.
             common_root_columns (List[Dict]):               The parent columns.
+            primary_key (str):                              The primary key.
             source_kafka_topic_subject_schema_name (str):   The source Kafka topic name.
             source_table_name (str):                        The source table name.
             sink_table_name (str):                          The sink table name.
@@ -74,6 +74,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
         self._root_primary_key_types = working_root_column[ROOT_COLUMN_METADATA['primary_key_types']]
         self._track_record_columns = False
         self._column_count = 0
+        self.primary_key = primary_key
         self._source_table_name = source_table_name
         self._sink_table_name = sink_table_name
         self._metadata = []
@@ -355,7 +356,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
  
                             cte_query_item = f"{nested_column_cte} AS (\n"
                             cte_query_item += "    SELECT\n"
-                            cte_query_item += f"        {TABLE_ALIAS_NAME}.{PRIMARY_KEY_NAME},\n"
+                            cte_query_item += f"        {TABLE_ALIAS_NAME}.{self.primary_key},\n"
                             base_column_name = self._root_column_name if self._root_column_name not in self._reserved_words else f"`{self._root_column_name}`"
                             cte_query_item += ",\n".join([f"        {TABLE_ALIAS_NAME}.{base_column_name}.`{primary_key}` AS {self._root_column_name}_{primary_key}" for primary_key in self._root_primary_key_names])
                             cte_query_item += ",\n"
@@ -364,7 +365,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
                             base_column_expression = "    AND ".join([f"{TABLE_ALIAS_NAME}.{base_column_name}.`{primary_key}` = cte_{cte_count}.{self._root_column_name}_{primary_key}" for primary_key in self._root_primary_key_names])
                            
                             # Set the LEFT JOIN ON clause.
-                            cte_from_item = f"LEFT JOIN\n        {nested_column_cte} AS {cte_alias}\n        ON {TABLE_ALIAS_NAME}.{PRIMARY_KEY_NAME} = cte_{cte_count}.{PRIMARY_KEY_NAME} AND {base_column_expression}"
+                            cte_from_item = f"LEFT JOIN\n        {nested_column_cte} AS {cte_alias}\n        ON {TABLE_ALIAS_NAME}.{self.primary_key} = cte_{cte_count}.{self.primary_key} AND {base_column_expression}"
                            
                             select_from.append({
                                 FROM_METADATA["nested_name"]: nested_column,
@@ -462,7 +463,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
  
                             cte_query_item = f"{nested_child_column.replace('`','')}_cte AS (\n"
                             cte_query_item += "    SELECT\n"
-                            cte_query_item += f"        {TABLE_ALIAS_NAME}.{PRIMARY_KEY_NAME},\n"
+                            cte_query_item += f"        {TABLE_ALIAS_NAME}.{self.primary_key},\n"
                             if base_array_alias == "":
                                 if continuation_from_previous_level:
                                     cte_query_item += ",\n".join([f"        {TABLE_ALIAS_NAME}.{base_column_name}.`{primary_key}` AS {self._root_column_name}_{primary_key}" for primary_key in self._root_primary_key_names])
@@ -479,7 +480,7 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
                                 base_column_expression = "    AND ".join([f"{base_array_alias}.`{primary_key}` = cte_{cte_count}.{self._root_column_name}_{primary_key}" for primary_key in self._root_primary_key_names])
  
                             # Set the LEFT JOIN ON clause.
-                            cte_from_item = f"LEFT JOIN\n        {nested_child_column.replace('`','')}_cte AS {cte_alias}\n        ON {TABLE_ALIAS_NAME}.{PRIMARY_KEY_NAME} = cte_{cte_count}.{PRIMARY_KEY_NAME} AND {base_column_expression}"
+                            cte_from_item = f"LEFT JOIN\n        {nested_child_column.replace('`','')}_cte AS {cte_alias}\n        ON {TABLE_ALIAS_NAME}.{self.primary_key} = cte_{cte_count}.{self.primary_key} AND {base_column_expression}"
  
                             select_from.append({
                                 FROM_METADATA["nested_name"]: nested_child_column,
@@ -681,9 +682,9 @@ class GenerateFlinkSqlStatementsForFullyFlattenRootRecord:
         create_statement = f"CREATE TABLE {self._sink_table_name} (\n"
         create_statement += ",\n".join([f"    `{column[SELECT_METADATA['name']].replace('`', '')}` {self._set_data_type(column[SELECT_METADATA['type']])}" for column in self._common_root_columns]) + ",\n"
         create_statement += ",\n".join([f"    `{column[SELECT_METADATA['alias']].replace('`', '')}` {self._set_data_type(column[SELECT_METADATA['type']])}" for column in self._metadata]) + ",\n"
-        create_statement += "    CONSTRAINT `PRIMARY` PRIMARY KEY (`load_id`) NOT ENFORCED\n"
+        create_statement += f"    CONSTRAINT `PRIMARY` PRIMARY KEY (`{self.primary_key}`) NOT ENFORCED\n"
         create_statement += ")\n"
-        create_statement += "DISTRIBUTED BY HASH(`load_id`) INTO 1 BUCKETS\n"
+        create_statement += f"DISTRIBUTED BY HASH(`{self.primary_key}`) INTO 1 BUCKETS\n"
         create_statement += "WITH ("
         create_statement += "\n    'changelog.mode' = 'retract',"
         create_statement += "\n    'connector' = 'confluent',"
