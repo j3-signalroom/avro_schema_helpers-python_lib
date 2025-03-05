@@ -7,6 +7,7 @@ The format is base on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), 
 ## [0.04.01.000] - 2025-03-05
 ### Changed
 - Issue [#33](https://github.com/j3-signalroom/ccaf-avro_schema_helpers-python_lib/issues/33)
+- Issue [#34](https://github.com/j3-signalroom/ccaf-avro_schema_helpers-python_lib/issues/34)
 
 ## [0.04.00.000] - 2025-03-03
 ### Added
