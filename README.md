@@ -25,7 +25,7 @@ This module's class uses a _depth-first traversal method_ to traverse an entire 
 ![depth-first traversal](.blog/images/depth-first-traversal.png)
 
 ## **2.0 Installation**
-Install the Confluent Cloud Clients Python Library using **`pip`**:
+Install the Confluent Cloud for Apache Flink (CCAF) Avro Schema Helpers Python Library using **`pip`**:
 ```bash
 pip install ccaf-avro-schema-helpers-python-lib
 ```

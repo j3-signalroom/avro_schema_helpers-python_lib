@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is base on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.04.02.000] - 2025-03-05
+### Changed
+- Issue [#46](https://github.com/j3-signalroom/ccaf-avro_schema_helpers-python_lib/issues/46)
+
 ## [0.04.01.000] - 2025-03-05
 ### Changed
 - Issue [#33](https://github.com/j3-signalroom/ccaf-avro_schema_helpers-python_lib/issues/33)
